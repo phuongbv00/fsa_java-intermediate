@@ -3,12 +3,12 @@ package solid.service;
 public class OrderService {
     public void processOrder(String orderId) {
         System.out.println("Processing order: " + orderId);
-        updateOrder(orderId);
+        updateOrderStatus(orderId, 1);
         sendEmail(orderId);
     }
 
-    public void updateOrder(String orderId) {
-        System.out.println("Updating order: " + orderId);
+    public void updateOrderStatus(String orderId, int status) {
+        System.out.println("Updating order " + orderId + " status: " + status);
     }
 
     public void sendEmail(String orderId) {
