@@ -3,6 +3,24 @@ package solid.repository.impl;
 import solid.repository.OrderRepository;
 
 public class OrderJpaRepository implements OrderRepository {
+    private static OrderRepository instance;
+
+    private OrderJpaRepository() {
+    }
+
+    // Thread-safe + Lazy Loading
+    public static OrderRepository getInstance() {
+        if (instance != null) {
+            return instance;
+        }
+        synchronized (OrderJpaRepository.class) {
+            if (instance == null) {
+                instance = new OrderJpaRepository();
+            }
+            return instance;
+        }
+    }
+
     @Override
     public int getStatus(String orderId) {
         return 0;

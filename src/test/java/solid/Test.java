@@ -1,11 +1,8 @@
 package solid;
 
-import solid.repository.OrderMockRepository;
-import solid.repository.OrderRepository;
-import solid.service.NotificationMockService;
-import solid.service.NotificationService;
+import solid.factory.ServiceFactory;
+import solid.factory.service.MockServiceFactory;
 import solid.service.OrderService;
-import solid.service.impl.OrderServiceImpl;
 
 public class Test {
     public static void main(String[] args) {
@@ -13,9 +10,8 @@ public class Test {
     }
 
     private static void processOrder() {
-        OrderRepository orderRepository = new OrderMockRepository();
-        NotificationService notificationService = new NotificationMockService();
-        OrderService orderService = new OrderServiceImpl(orderRepository, notificationService);
+        ServiceFactory serviceFactory = new MockServiceFactory();
+        OrderService orderService = serviceFactory.getOrderService();
         orderService.processOrder("1");
     }
 }
