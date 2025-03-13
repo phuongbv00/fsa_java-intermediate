@@ -7,7 +7,7 @@ public class CacheAndExpireDemo {
     public static void main(String[] args) throws InterruptedException {
         Random random = new Random();
 
-        // get from DB - simulate
+        // Get data from DB - simulate
         List<Product> dbProducts = List.of(
                 new Product(1, "a"),
                 new Product(2, "b"),
@@ -17,10 +17,10 @@ public class CacheAndExpireDemo {
                 new Product(6, "www2")
         );
 
-        // int cache
+        // Init cache
         Map<CacheKey<Integer>, CacheItem> cache = new TreeMap<>();
 
-        // put products list into cache, each element has specific expires
+        // Put products list into cache, each element has specific expires
         dbProducts.forEach(product -> {
             Instant now = Instant.now();
             long expires = now.getEpochSecond() + random.nextLong(60);
