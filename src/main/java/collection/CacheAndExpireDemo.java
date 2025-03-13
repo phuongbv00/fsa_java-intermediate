@@ -7,6 +7,9 @@ public class CacheAndExpireDemo {
     public static void main(String[] args) throws InterruptedException {
         Random random = new Random();
 
+        // Store cache keys
+        Map<Integer, CacheKey<Integer>> cacheKeys = new HashMap<>();
+
         // Get data from DB - simulate
         List<Product> dbProducts = List.of(
                 new Product(1, "a"),
@@ -23,19 +26,30 @@ public class CacheAndExpireDemo {
         // Put products list into cache, each element has specific expires
         dbProducts.forEach(product -> {
             Instant now = Instant.now();
-            long expires = now.getEpochSecond() + random.nextLong(60);
+            long expires = now.getEpochSecond() + random.nextLong(30);
             CacheItem item = new CacheItem(product.toString(), expires);
             CacheKey<Integer> key = new CacheKey<>(product.id, expires);
+            cacheKeys.put(product.id, key);
             cache.put(key, item);
         });
 
-        System.out.println(cache.size());
+        System.out.println("Initial:");
+        System.out.println("Cache size: " + cache.size());
         System.out.println(cache);
+
+        // Get from cache
+        System.out.println("===");
+        System.out.println("Get by key=" + 3 + ":");
+        System.out.println(cache.get(cacheKeys.get(3)));
+        System.out.println("===");
 
         // OBJECTIVE: expire the cache item most efficiently!
 
         // Wait for some items to be expired
-        Thread.sleep(random.nextLong(30) * 1000);
+        long sleepTime = random.nextLong(20);
+        System.out.printf("Sleep %d seconds...%n", sleepTime);
+        Thread.sleep(sleepTime * 1000);
+        System.out.println("===");
 
         // Bad solution -> forEach -> remove -> O(n)
 
@@ -50,7 +64,8 @@ public class CacheAndExpireDemo {
                 break;
             }
         }
-        System.out.println(cache.size());
+        System.out.println("After being expired:");
+        System.out.println("Cache size: " + cache.size());
         System.out.println(cache);
     }
 
