@@ -3,8 +3,8 @@ package challenge.quiz02;
 import challenge.quiz02.model.Product;
 import challenge.quiz02.repository.ProductInMemoryRepository;
 import challenge.quiz02.repository.Repository;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
+import org.junit.Before;
+import org.junit.Test;
 
 import java.time.Instant;
 import java.util.*;
@@ -12,18 +12,18 @@ import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.Assert.*;
 
 public class ProductInMemoryRepositoryTest {
     private Repository<Integer, Product> repository;
 
-    @BeforeEach
-    void setUp() {
+    @Before
+    public void setUp() {
         repository = new ProductInMemoryRepository();
     }
 
     @Test
-    void testSaveAndFindById() {
+    public void testSaveAndFindById() {
         Product product = new Product(1, "Test Product", 10.0, Instant.now());
         repository.save(product);
         Optional<Product> retrieved = repository.findById(1);
@@ -32,7 +32,7 @@ public class ProductInMemoryRepositoryTest {
     }
 
     @Test
-    void testFindAll() {
+    public void testFindAll() {
         Product product1 = new Product(1, "Product 1", 20.0, Instant.now());
         Product product2 = new Product(2, "Product 2", 30.0, Instant.now());
         repository.save(product1);
@@ -44,7 +44,7 @@ public class ProductInMemoryRepositoryTest {
     }
 
     @Test
-    void testFindAllWithFilterAndSorting() {
+    public void testFindAllWithFilterAndSorting() {
         Product product1 = new Product(1, "Apple", 15.0, Instant.now().minusSeconds(100));
         Product product2 = new Product(2, "Banana", 10.0, Instant.now().minusSeconds(200));
         Product product3 = new Product(3, "Cherry", 25.0, Instant.now().minusSeconds(50));
@@ -64,7 +64,7 @@ public class ProductInMemoryRepositoryTest {
     }
 
     @Test
-    void testUpdate() {
+    public void testUpdate() {
         Product product = new Product(1, "Old Name", 40.0, Instant.now());
         repository.save(product);
         Product updatedProduct = new Product(1, "New Name", 50.0, Instant.now());
@@ -72,17 +72,17 @@ public class ProductInMemoryRepositoryTest {
         Optional<Product> retrieved = repository.findById(1);
         assertTrue(retrieved.isPresent());
         assertEquals("New Name", retrieved.get().getName());
-        assertEquals(50.0, retrieved.get().getPrice());
+        assertEquals(50.0, retrieved.get().getPrice(), 0);
     }
 
-    @Test
-    void testUpdateNotFound() {
+    @Test(expected = NoSuchElementException.class)
+    public void testUpdateNotFound() {
         Product notFoundProduct = new Product(2, "New Name", 60.0, Instant.now());
-        assertThrows(NoSuchElementException.class, () -> repository.update(notFoundProduct));
+        repository.update(notFoundProduct);
     }
 
     @Test
-    void testDelete() {
+    public void testDelete() {
         Product product = new Product(1, "Test Product", 25.0, Instant.now());
         repository.save(product);
         repository.delete(1);
@@ -91,7 +91,7 @@ public class ProductInMemoryRepositoryTest {
     }
 
     @Test
-    void testConcurrentModification() throws InterruptedException {
+    public void testConcurrentModification() throws InterruptedException {
         int threadCount = 10;
         ExecutorService executorService = Executors.newFixedThreadPool(threadCount);
         CountDownLatch latch = new CountDownLatch(threadCount);
