@@ -2,13 +2,10 @@ package challenge.quiz02.repository;
 
 import challenge.quiz02.model.Product;
 
-import java.util.Collection;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.function.Predicate;
 
-public class ProductInMemoryRepository implements Repository<Integer, Product> {
+public class ProductInMemoryRepository implements ProductRepository {
     @Override
     public Optional<Product> findById(Integer integer) {
         // TODO
@@ -42,5 +39,23 @@ public class ProductInMemoryRepository implements Repository<Integer, Product> {
     @Override
     public void delete(Integer integer) {
         // TODO
+    }
+
+    @Override
+    public int countBy(Predicate<Product> filter) {
+        // TODO
+        return 0;
+    }
+
+    @Override
+    public Map<Boolean, Integer> partitionByPrice(Double price) {
+        // TODO
+        return Map.of();
+    }
+
+    @Override
+    public Map<String, Product> groupByName() {
+        // TODO
+        return Map.of();
     }
 }

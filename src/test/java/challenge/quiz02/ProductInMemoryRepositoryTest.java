@@ -2,7 +2,7 @@ package challenge.quiz02;
 
 import challenge.quiz02.model.Product;
 import challenge.quiz02.repository.ProductInMemoryRepository;
-import challenge.quiz02.repository.Repository;
+import challenge.quiz02.repository.ProductRepository;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -15,7 +15,20 @@ import java.util.concurrent.Executors;
 import static org.junit.Assert.*;
 
 public class ProductInMemoryRepositoryTest {
-    private Repository<Integer, Product> repository;
+    private ProductRepository repository;
+
+    private final List<Product> mock = List.of(
+            new Product(1, "Apple", 15.0, Instant.now().minusSeconds(100)),
+            new Product(2, "Banana", 70.0, Instant.now().minusSeconds(200)),
+            new Product(3, "Cherry", 25.0, Instant.now().minusSeconds(50)),
+            new Product(4, "Date", 90.0, Instant.now().minusSeconds(300)),
+            new Product(5, "Apple", 35.0, Instant.now().minusSeconds(100)),
+            new Product(6, "Banana", 60.0, Instant.now().minusSeconds(200)),
+            new Product(7, "Cherry", 85.0, Instant.now().minusSeconds(50)),
+            new Product(8, "Date", 20.0, Instant.now().minusSeconds(300)),
+            new Product(9, "Date", 50.0, Instant.now().minusSeconds(1000)),
+            new Product(10, "Dong", 50.0, Instant.now().minusSeconds(2000))
+    );
 
     @Before
     public void setUp() {
@@ -23,7 +36,7 @@ public class ProductInMemoryRepositoryTest {
     }
 
     @Test
-    public void testSaveAndFindById() {
+    public void saveAndFindById() {
         Product product = new Product(1, "Test Product", 10.0, Instant.now());
         repository.save(product);
         Optional<Product> retrieved = repository.findById(1);
@@ -32,7 +45,7 @@ public class ProductInMemoryRepositoryTest {
     }
 
     @Test
-    public void testFindAll() {
+    public void findAll() {
         Product product1 = new Product(1, "Product 1", 20.0, Instant.now());
         Product product2 = new Product(2, "Product 2", 30.0, Instant.now());
         repository.save(product1);
@@ -44,7 +57,7 @@ public class ProductInMemoryRepositoryTest {
     }
 
     @Test
-    public void testFindAllWithFilterAndSorting() {
+    public void findAllWithFilterAndSorting() {
         Product product1 = new Product(1, "Apple", 15.0, Instant.now().minusSeconds(100));
         Product product2 = new Product(2, "Banana", 10.0, Instant.now().minusSeconds(200));
         Product product3 = new Product(3, "Cherry", 25.0, Instant.now().minusSeconds(50));
@@ -64,7 +77,7 @@ public class ProductInMemoryRepositoryTest {
     }
 
     @Test
-    public void testUpdate() {
+    public void update() {
         Product product = new Product(1, "Old Name", 40.0, Instant.now());
         repository.save(product);
         Product updatedProduct = new Product(1, "New Name", 50.0, Instant.now());
@@ -76,13 +89,13 @@ public class ProductInMemoryRepositoryTest {
     }
 
     @Test(expected = NoSuchElementException.class)
-    public void testUpdateNotFound() {
+    public void updateNotFound() {
         Product notFoundProduct = new Product(2, "New Name", 60.0, Instant.now());
         repository.update(notFoundProduct);
     }
 
     @Test
-    public void testDelete() {
+    public void delete() {
         Product product = new Product(1, "Test Product", 25.0, Instant.now());
         repository.save(product);
         repository.delete(1);
@@ -91,7 +104,31 @@ public class ProductInMemoryRepositoryTest {
     }
 
     @Test
-    public void testConcurrentModification() throws InterruptedException {
+    public void countBy() {
+        mock.forEach(product -> repository.save(product));
+        int count = repository.countBy(p -> p.getPrice() >= 50 && p.getName().startsWith("D"));
+        assertEquals(3, count);
+    }
+
+    @Test
+    public void partitionByPrice() {
+        mock.forEach(product -> repository.save(product));
+        Map<Boolean, Integer> partitions = repository.partitionByPrice(50.0);
+        assertTrue(partitions.containsKey(true));
+        assertTrue(partitions.containsKey(false));
+        assertEquals(6, partitions.get(true).intValue());
+        assertEquals(4, partitions.get(false).intValue());
+    }
+
+    @Test
+    public void groupByName() {
+        mock.forEach(product -> repository.save(product));
+        Map<String, Product> groupByName = repository.groupByName();
+        assertEquals(5, groupByName.size());
+    }
+
+    @Test
+    public void concurrentModification() throws InterruptedException {
         int threadCount = 10;
         ExecutorService executorService = Executors.newFixedThreadPool(threadCount);
         CountDownLatch latch = new CountDownLatch(threadCount);

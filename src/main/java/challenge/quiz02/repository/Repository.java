@@ -17,4 +17,6 @@ public interface Repository<ID, E> {
     E update(E e);
 
     void delete(ID id);
+
+    int countBy(Predicate<E> filter);
 }
