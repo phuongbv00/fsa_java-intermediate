@@ -43,6 +43,13 @@ public class FPTest {
         System.out.println(doubleThenIncrement.apply(3));
     }
 
+    @Test(expected = IllegalStateException.class)
+    public void streamReferenceError() {
+        Stream<Integer> stream = Stream.of(1, 2, 3, 4, 5, 6, 7, 8, 9, 10);
+        List<Integer> list1 = stream.filter(i -> i % 2 == 0).toList();
+        List<Integer> list2 = stream.filter(i -> i % 2 != 0).toList();
+    }
+
     @Test
     public void streamLazyExecution() {
         List<String> list = List.of("abc1", "abc2", "abc3");
@@ -66,6 +73,7 @@ public class FPTest {
 
     @Test
     public void collect() {
+        // collect(Collectors.toList()) vs toList()
         System.out.println(Stream.of(1, 2, 3, 4, 5, 6, 7).collect(Collectors.toList()).getClass().getCanonicalName());
         System.out.println(Stream.of(1, 2, 3, 4, 5, 6, 7).toList().getClass().getCanonicalName());
 
@@ -83,12 +91,17 @@ public class FPTest {
         System.out.println(people.stream().collect(Collectors.toMap(Person::getName, Person::getAge)));
         System.out.println(people.stream().map(Person::getName).collect(Collectors.joining(", ", "[", "]")));
         System.out.println(people.stream().map(Person::getAge).collect(Collectors.averagingInt(i -> i)));
+
+        // Advanced collecting
         System.out.println(people.stream().collect(Collectors.groupingBy(Person::getAge)));
         System.out.println(people.stream().collect(Collectors.groupingBy(Person::getAge, Collectors.counting())));
         System.out.println(people.stream().collect(Collectors.partitioningBy(p -> p.getAge() > 10)));
-        Map<Boolean, Long> peopleByAgePartitions = people.stream().collect(Collectors.partitioningBy(p -> p.getAge() > 10, Collectors.counting()));
+
+        Map<Boolean, Long> peopleByAgePartitions = people.stream()
+                .collect(Collectors.partitioningBy(p -> p.getAge() > 10, Collectors.counting()));
         System.out.println(peopleByAgePartitions);
         System.out.println(peopleByAgePartitions.getClass().getCanonicalName());
+
         Map<Boolean, Long> unmodifiedPeopleByAgePartitions = people.stream()
                 .collect(
                         Collectors.collectingAndThen(
