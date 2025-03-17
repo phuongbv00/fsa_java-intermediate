@@ -21,16 +21,13 @@ public class FPTest {
         Function<Integer, Integer> incrementFunction = plusFunctionBuilder.apply(1);
         Function<Integer, Integer> doubleValueFunction = multiplyFunctionBuilder.apply(2);
 
-        // Function as argument
         System.out.println(incrementFunction.apply(3));
         System.out.println(doubleValueFunction.apply(3));
 
+        // Function as argument
         Stream.of(1, 2, 3, 4, 5, 6, 7, 8, 9, 10)
+                .filter(t -> t % 2 == 0)
                 .map(incrementFunction)
-                .forEach(i -> System.out.print(i + " "));
-        System.out.println();
-        Stream.of(1, 2, 3, 4, 5, 6, 7, 8, 9, 10)
-                .map(doubleValueFunction)
                 .forEach(i -> System.out.print(i + " "));
     }
 
