@@ -2,11 +2,12 @@ package lecture.fp;
 
 import org.junit.Test;
 
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
+import java.util.function.BiConsumer;
+import java.util.function.BinaryOperator;
 import java.util.function.Function;
+import java.util.function.Supplier;
+import java.util.stream.Collector;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
@@ -72,7 +73,7 @@ public class FPTest {
     }
 
     @Test
-    public void collect() {
+    public void collect() throws InterruptedException {
         // collect(Collectors.toList()) vs toList()
         System.out.println(Stream.of(1, 2, 3, 4, 5, 6, 7).collect(Collectors.toList()).getClass().getCanonicalName());
         System.out.println(Stream.of(1, 2, 3, 4, 5, 6, 7).toList().getClass().getCanonicalName());
@@ -110,6 +111,75 @@ public class FPTest {
                 );
         System.out.println(unmodifiedPeopleByAgePartitions);
         System.out.println(unmodifiedPeopleByAgePartitions.getClass().getCanonicalName());
+    }
+
+    @Test
+    public void customCollector() throws InterruptedException {
+        List<Person> people = List.of(
+                new Person("Alice", 24),
+                new Person("Bob", 37),
+                new Person("Cong", 15),
+                new Person("Duc", 81),
+                new Person("Ellie", 7),
+                new Person("Phuong", 15),
+                new Person("Gojo", 15),
+                new Person("Hanh", 48),
+                new Person("Xiao Mao", 24)
+        );
+        int accAge = people.stream().collect(new Collector<Person, Container<Integer>, Integer>() {
+            @Override
+            public Supplier<Container<Integer>> supplier() {
+                return () -> {
+                    try {
+                        return new Container<>(getInitialAge());
+                    } catch (InterruptedException e) {
+                        throw new RuntimeException(e);
+                    }
+                };
+            }
+
+            @Override
+            public BiConsumer<Container<Integer>, Person> accumulator() {
+                return (acc, cur) -> acc.setValue(acc.getValue() + cur.getAge());
+            }
+
+            @Override
+            public BinaryOperator<Container<Integer>> combiner() {
+                return (c1, c2) -> new Container<>(c1.getValue() + c2.getValue());
+            }
+
+            @Override
+            public Function<Container<Integer>, Integer> finisher() {
+                return Container::getValue;
+            }
+
+            @Override
+            public Set<Characteristics> characteristics() {
+                return Set.of();
+            }
+        });
+        System.out.println(accAge);
+    }
+
+    static class Container<T> {
+        private T value;
+
+        public Container(T value) {
+            this.value = value;
+        }
+
+        public T getValue() {
+            return value;
+        }
+
+        public void setValue(T value) {
+            this.value = value;
+        }
+    }
+
+    Integer getInitialAge() throws InterruptedException {
+        Thread.sleep(1000);
+        return 0;
     }
 
     @Test
