@@ -1,0 +1,364 @@
+{
+  "mc_questions": [
+    {
+      "question": "According to the sources, what is the primary role of the JVM?",
+      "answers": [
+        "Bytecode executor",
+        "Development tools provider",
+        "Operating system interface",
+        "Library collection"
+      ]
+    },
+    {
+      "question": "Which component is a part of the JRE according to the sources?",
+      "answers": [
+        "JVM",
+        "Development tools",
+        "Debugger",
+        "Compiler"
+      ]
+    },
+    {
+      "question": "What does JDK include according to the provided information?",
+      "answers": [
+        "JRE and development tools",
+        "JVM and libraries",
+        "Bytecode executor only",
+        "Libraries only"
+      ]
+    },
+    {
+      "question": "Which JVM memory area stores objects and instance variables?",
+      "answers": [
+        "Heap",
+        "Stack",
+        "Method Area",
+        "Program Counter Register"
+      ]
+    },
+    {
+      "question": "According to the sources, what is the purpose of the Stack in the JVM?",
+      "answers": [
+        "Stores method call frames",
+        "Stores class metadata",
+        "Stores objects",
+        "Holds the address of the next instruction"
+      ]
+    },
+    {
+      "question": "What is a core concept of Object-Oriented Programming (OOP) mentioned in the sources?",
+      "answers": [
+        "Encapsulation",
+        "Procedural programming",
+        "Functional programming",
+        "Aspect-oriented programming"
+      ]
+    },
+    {
+      "question": "What is the primary purpose of encapsulation in OOP as initially understood?",
+      "answers": [
+        "Hiding inner information and protecting data",
+        "Enabling code reuse through inheritance",
+        "Allowing objects to have multiple forms",
+        "Defining abstract behaviors"
+      ]
+    },
+    {
+      "question": "Which keyword is used in Java to implement inheritance?",
+      "answers": [
+        "extends",
+        "implements",
+        "inherits",
+        "subclass"
+      ]
+    },
+    {
+      "question": "What does polymorphism allow according to the sources?",
+      "answers": [
+        "The same method to have different behaviors",
+        "Classes to have only one instance",
+        "Hiding implementation details",
+        "Grouping related data and behavior"
+      ]
+    },
+    {
+      "question": "What is the main goal of abstraction in OOP as initially perceived?",
+      "answers": [
+        "Hide implementation details",
+        "Enable method overriding",
+        "Create reusable code",
+        "Define object states"
+      ]
+    },
+    {
+      "question": "What is the role of the Class Loader in the JVM architecture?",
+      "answers": [
+        "Prepare, verify, and resolve classes",
+        "Manage memory allocation for objects",
+        "Execute bytecode instructions",
+        "Perform garbage collection"
+      ]
+    },
+    {
+      "question": "Which JVM memory area was replaced by Metaspace in Java 8 and later?",
+      "answers": [
+        "PermGen (Permanent Generation)",
+        "Heap",
+        "Stack",
+        "Eden Space"
+      ]
+    },
+    {
+      "question": "What is the purpose of the String Pool (String Intern Pool) in the JVM?",
+      "answers": [
+        "Reduce memory duplication by storing interned String literals",
+        "Store all String objects created in the application",
+        "Manage temporary String objects during method execution",
+        "Optimize String concatenation operations"
+      ]
+    },
+    {
+      "question": "Which garbage collection activity typically results in a longer Stop-The-World (STW) pause?",
+      "answers": [
+        "Full GC",
+        "Minor GC",
+        "Young Generation collection",
+        "Eden Space collection"
+      ]
+    },
+    {
+      "question": "What is the primary goal of the JIT (Just-In-Time) compiler in the JVM?",
+      "answers": [
+        "Compile frequently executed bytecode into optimized machine code",
+        "Interpret bytecode line by line",
+        "Manage memory allocation and deallocation",
+        "Load and verify class files"
+      ]
+    },
+    {
+      "question": "What is the difference between method overloading and method overriding in Java?",
+      "answers": [
+        "Overloading occurs within the same class with different parameters, while overriding occurs in a subclass to redefine a method from the superclass",
+        "Overriding occurs within the same class with different parameters, while overloading occurs in a subclass to redefine a method from the superclass",
+        "Overloading is resolved at runtime, while overriding is resolved at compile time",
+        "Overriding involves static binding, while overloading involves dynamic binding"
+      ]
+    },
+    {
+      "question": "According to the \"senior\" perspective, what is a key aspect of encapsulation?",
+      "answers": [
+        "Defining strict external 'interfaces' and hiding inner implementation",
+        "Primarily focusing on data security through access modifiers",
+        "Maximizing the use of getter and setter methods",
+        "Exposing internal data for easier access"
+      ]
+    },
+    {
+      "question": "Why is it generally preferred to \"Favor Composition over Inheritance\" according to the sources?",
+      "answers": [
+        "To improve flexibility and avoid fragile base class problems",
+        "To enable code reuse with less effort",
+        "To establish a strong 'is-a' relationship",
+        "To reduce the complexity of class hierarchies"
+      ]
+    },
+    {
+      "question": "What is the difference between tightly coupled and loosely coupled modules?",
+      "answers": [
+        "Tightly coupled modules rely heavily on each other, making changes difficult, while loosely coupled modules can function independently",
+        "Loosely coupled modules rely heavily on each other, while tightly coupled modules function independently",
+        "Tightly coupled modules share minimal data, while loosely coupled modules share extensive data",
+        "Loosely coupled modules are easier to test, while tightly coupled modules are more performant"
+      ]
+    },
+    {
+      "question": "Which type of coupling is considered the best according to the sources?",
+      "answers": [
+        "Data Coupling",
+        "Content Coupling",
+        "Common Coupling",
+        "Control Coupling"
+      ]
+    },
+    {
+      "question": "What are the two JIT compilers used in Tiered Compilation in the JVM?",
+      "answers": [
+        "C1 (Client Compiler) and C2 (Server Compiler)",
+        "HotSpot Compiler and Native Image Compiler",
+        "Just-In-Time Compiler and Ahead-Of-Time Compiler",
+        "Optimizing Compiler and Non-Optimizing Compiler"
+      ]
+    },
+    {
+      "question": "What is the role of the Program Counter (PC) Register in the JVM?",
+      "answers": [
+        "Holds the address of the currently executing instruction",
+        "Stores local variables of a method",
+        "Manages the call stack for each thread",
+        "Contains metadata about classes and methods"
+      ]
+    },
+    {
+      "question": "Where are local variables and operands stored during method execution in the JVM?",
+      "answers": [
+        "Stack frames",
+        "Heap memory",
+        "Method Area",
+        "Native Method Stack"
+      ]
+    },
+    {
+      "question": "What is the benefit of using the G1 garbage collector?",
+      "answers": [
+        "Predictable pause times and incremental compaction",
+        "Minimal Stop-The-World pauses for all application sizes",
+        "Simple single-threaded garbage collection",
+        "Optimized for applications with very small heaps"
+      ]
+    },
+    {
+      "question": "According to the sources, what are the roles of the Garbage Collector?",
+      "answers": [
+        "Automatic memory management, preventing memory leaks, and improving memory efficiency",
+        "Compiling bytecode into machine code",
+        "Loading and verifying class files",
+        "Managing thread execution"
+      ]
+    },
+    {
+      "question": "What is the core idea behind the Single Responsibility Principle (SRP)?",
+      "answers": [
+        "A class should have only one reason to change",
+        "Software entities should be open for extension but closed for modification",
+        "Subclasses should be replaceable for their base classes",
+        "A class should not be forced to implement methods it does not need"
+      ]
+    },
+    {
+      "question": "What does the Open/Closed Principle (OCP) advocate for in software design?",
+      "answers": [
+        "Extension through inheritance or interfaces rather than modification",
+        "Classes having only one responsibility",
+        "Subtypes being substitutable for their base types",
+        "Depending on abstractions, not concretions"
+      ]
+    },
+    {
+      "question": "What is the primary focus of \"Cohesion\" in the context of good software design?",
+      "answers": [
+        "How closely related the tasks within a module are",
+        "The degree of dependency between two modules",
+        "The ability to extend software without modifying existing code",
+        "Ensuring that subclasses can be used in place of their superclasses"
+      ]
+    },
+    {
+      "question": "Which type of cohesion is considered the best?",
+      "answers": [
+        "Functional Cohesion",
+        "Logical Cohesion",
+        "Temporal Cohesion",
+        "Communicational Cohesion"
+      ]
+    },
+    {
+      "question": "What is the purpose of Dynamic Linking Information stored in the Stack Frame?",
+      "answers": [
+        "Helps the JVM resolve method calls at runtime, supporting polymorphism",
+        "Stores the return address of a method",
+        "Holds local variables used within a method",
+        "Manages the operands for calculations"
+      ]
+    },
+    {
+      "question": "How does the ZGC garbage collector achieve ultra-low STW pauses?",
+      "answers": [
+        "By using colored pointers and load barriers to track memory concurrently",
+        "By dividing the heap into fixed young/old generations",
+        "By performing all garbage collection in a single thread",
+        "By completely avoiding heap memory and using native memory only"
+      ]
+    },
+    {
+      "question": "What is the significance of the \"senior\" perspective on Abstraction?",
+      "answers": [
+        "Applying it at higher levels like API design and microservices to de-couple components",
+        "Focusing solely on hiding implementation details within a class",
+        "Primarily using abstract classes to achieve abstraction",
+        "Minimizing the number of interfaces in a system"
+      ]
+    },
+    {
+      "question": "Explain the \"fragile base class problem\" in the context of inheritance.",
+      "answers": [
+        "Changes to the base class unexpectedly break subclasses due to tight coupling",
+        "Subclasses cannot override methods from the base class",
+        "The base class becomes too large and complex to maintain",
+        "Inheritance hierarchies limit code reuse"
+      ]
+    },
+    {
+      "question": "How does \"Stamp Coupling\" differ from \"Data Coupling\", and why is Data Coupling preferred?",
+      "answers": [
+        "Stamp Coupling shares entire data structures even if only part is used, while Data Coupling shares only required data, reducing dependencies",
+        "Data Coupling shares entire data structures, while Stamp Coupling shares only necessary data",
+        "Stamp Coupling leads to better performance than Data Coupling",
+        "Data Coupling makes modules more difficult to understand"
+      ]
+    },
+    {
+      "question": "Describe a scenario where using Ahead-Of-Time (AOT) compilation might be preferred over Just-In-Time (JIT) compilation according to the sources.",
+      "answers": [
+        "For small CLI tools or microservices requiring quick startup",
+        "For long-running applications where peak performance is critical",
+        "For applications with frequent code changes",
+        "For applications running on resource-constrained devices"
+      ]
+    },
+    {
+      "question": "How can increasing the stack size using the `-Xss` JVM argument potentially impact an application?",
+      "answers": [
+        "It can prevent StackOverflowError but might also reduce the number of threads that can be created",
+        "It directly increases the amount of memory available for objects on the heap",
+        "It speeds up the execution of recursive methods without any drawbacks",
+        "It primarily affects the startup time of the JVM"
+      ]
+    },
+    {
+      "question": "What is the trade-off between using the CMS garbage collector and more modern garbage collectors like G1, ZGC, or Shenandoah?",
+      "answers": [
+        "CMS is mostly concurrent but non-compacting and still has STW phases, while modern GCs aim for more concurrency and better pause time predictability",
+        "CMS offers significantly lower CPU overhead compared to modern GCs",
+        "Modern GCs are only suitable for very large heap sizes, unlike CMS",
+        "CMS automatically handles memory fragmentation better than modern GCs"
+      ]
+    },
+    {
+      "question": "Explain the concept of \"adaptive optimization\" performed by the JIT compiler.",
+      "answers": [
+        "Recompiling code based on runtime analysis to further optimize it",
+        "Optimizing code only during the initial compilation phase",
+        "Choosing between C1 and C2 compilers based on command-line arguments",
+        "Dynamically allocating memory for compiled code"
+      ]
+    },
+    {
+      "question": "How does the \"senior\" understanding of Encapsulation relate to the concept of \"bounded contexts\" in microservices?",
+      "answers": [
+        "Each microservice encapsulates its business logic and data, communicating via APIs, similar to defining strict external interfaces",
+        "Encapsulation in microservices primarily focuses on securing inter-service communication",
+        "Bounded contexts in microservices eliminate the need for encapsulation within each service",
+        "Encapsulation at the microservice level mainly deals with database schema hiding"
+      ]
+    },
+    {
+      "question": "How does the Liskov Substitution Principle (LSP) relate to the design principle of \"Favor Composition over Inheritance\"?",
+      "answers": [
+        "Favoring composition can lead to more robust systems where objects can be replaced without violating expected behavior, aligning with LSP",
+        "LSP mandates the use of inheritance over composition for better code organization",
+        "Composition inherently violates LSP by creating 'has-a' relationships instead of 'is-a'",
+        "LSP is only relevant when using abstract classes, not interfaces, which are favored in composition"
+      ]
+    }
+  ]
+}

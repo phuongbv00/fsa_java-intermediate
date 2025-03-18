@@ -1,0 +1,19 @@
+{
+  "oe_questions": [
+    {
+      "question": "Explain the collaboration mechanism between the Class Loader, Memory Areas, and the Execution Engine in the JVM when running a Java program."
+    },
+    {
+      "question": "Compare and contrast Minor GC, Major GC, and Full GC in terms of the JVM memory areas they affect and their impact on application performance (Stop-The-World pauses)."
+    },
+    {
+      "question": "Discuss the trade-offs between high cohesion and low coupling in software design. Provide a practical example (not necessarily from the provided sources) to illustrate these concepts."
+    },
+    {
+      "question": "Explain the core difference between Inheritance and Composition in OOP, highlighting the benefits of favoring Composition as described in the sources."
+    },
+    {
+      "question": "Describe the purposes of JVM Profiling and how to do it (from attaching profiler to reading the reports)."
+    }
+  ]
+}
