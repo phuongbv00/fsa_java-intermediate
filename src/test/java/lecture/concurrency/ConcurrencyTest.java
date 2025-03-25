@@ -2,10 +2,8 @@ package lecture.concurrency;
 
 import org.junit.Test;
 
-import java.util.concurrent.CountDownLatch;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.Semaphore;
+import java.util.List;
+import java.util.concurrent.*;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.concurrent.locks.Condition;
 import java.util.concurrent.locks.Lock;
@@ -13,7 +11,7 @@ import java.util.concurrent.locks.ReentrantLock;
 
 public class ConcurrencyTest {
     @Test
-    public void thread() throws InterruptedException {
+    public void thread() throws InterruptedException, ExecutionException {
         Runnable task = () -> {
             System.out.println(Thread.currentThread().getName() + " running...");
             try {
@@ -34,6 +32,21 @@ public class ConcurrencyTest {
         executor.submit(task);
         executor2.submit(task);
         executor2.submit(task);
+
+        Callable<Integer> returnableTask = () -> {
+            System.out.println(Thread.currentThread().getName() + " running...");
+            try {
+                Thread.sleep(3000);
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
+            return 42;
+        };
+
+        Future<Integer> rs = executor2.submit(returnableTask);
+        System.out.println(rs);
+        System.out.println(rs.get());
+        System.out.println(rs);
 
         Thread.sleep(10000);
     }
@@ -298,6 +311,110 @@ public class ConcurrencyTest {
         }
 
         System.out.println("Final counter value: " + counter.get());
+    }
+
+    @Test
+    public void completableFuture() {
+        // Async task execution ~ Non-blocking
+        CompletableFuture<Integer> future = CompletableFuture.supplyAsync(() -> {
+            try {
+                Thread.sleep(2000);
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
+            return 42;
+        });
+
+        // Consume async task without blocking
+        CompletableFuture.supplyAsync(() -> {
+                    try {
+                        Thread.sleep(2000);
+                    } catch (InterruptedException e) {
+                        throw new RuntimeException(e);
+                    }
+                    return 1120;
+                })
+                .thenAccept(v -> System.out.println(Thread.currentThread().getName() + " consumes async task without blocking: " + v));
+
+        // Chaining computations
+        CompletableFuture<Integer> future2 = future
+                .thenApply(x -> {
+                    System.out.println(Thread.currentThread().getName() + " computes x * 2");
+                    return x * 2;
+                })
+                .thenApply(x -> {
+                    System.out.println(Thread.currentThread().getName() + " computes x + 5");
+                    return x + 5;
+                })
+                .thenApplyAsync(x -> {
+                    System.out.println(Thread.currentThread().getName() + " computes x * x");
+                    return x * x;
+                })
+                .thenApplyAsync(x -> {
+                    System.out.println(Thread.currentThread().getName() + " computes x * x * x");
+                    return x * x * x;
+                }, Executors.newCachedThreadPool());
+
+        // Combining 2 async tasks
+        CompletableFuture<Integer> future3 = future.thenCombine(future2, (x, y) -> x * x + y);
+
+        // Custom thread pool
+        ExecutorService executor = Executors.newFixedThreadPool(3);
+
+        // Exception handling
+        CompletableFuture<Integer> future4 = CompletableFuture.<Integer>supplyAsync(() -> {
+                    throw new RuntimeException();
+                }, executor)
+                .thenApply(x -> x * 2)
+                .thenApply(x -> x + 5)
+                .exceptionally(e -> 111);
+
+        // Handle dependent tasks
+        CompletableFuture<List<String>> future5 = fetchUser(1)
+                .thenCompose(this::fetchOrders);
+
+        CompletableFuture<Void> allTasks = CompletableFuture.allOf(
+                future,
+                future2,
+                future3,
+                future4,
+                future5
+        );
+
+        // Block to wait for all tasks to be done
+        allTasks.join();
+        System.out.println("All tasks completed!");
+        System.out.println("task 1: " + future.join());
+        System.out.println("task 2: " + future2.join());
+        System.out.println("task 3: " + future3.join());
+        System.out.println("task 4: " + future4.join());
+        System.out.println("task 5: " + future5.join());
+    }
+
+    CompletableFuture<Person> fetchUser(int id) {
+        ExecutorService executor = Executors.newWorkStealingPool(2);
+        return CompletableFuture.supplyAsync(() -> {
+            try {
+                System.out.println(Thread.currentThread().getName() + " is trying to fetch user " + id);
+                Thread.sleep(3000);
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
+            return new Person("Bob");
+        }, executor);
+    }
+
+    CompletableFuture<List<String>> fetchOrders(Person user) {
+        ExecutorService executor = Executors.newFixedThreadPool(2);
+        return CompletableFuture.supplyAsync(() -> {
+            try {
+                System.out.println(Thread.currentThread().getName() + " is trying to fetch orders of " + user);
+                Thread.sleep(5000);
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
+            return List.of("order1", "order2", "order3");
+        }, executor);
     }
 
     static class Person {
