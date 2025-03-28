@@ -2,53 +2,94 @@ package lecture.concurrency;
 
 import org.junit.Test;
 
+import java.time.temporal.ChronoUnit;
 import java.util.List;
 import java.util.concurrent.*;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.concurrent.locks.Condition;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
+import java.util.concurrent.locks.StampedLock;
 
 public class ConcurrencyTest {
+    static class Task implements Runnable {
+        private final int id;
+
+        public Task(int id) {
+            this.id = id;
+        }
+
+        @Override
+        public void run() {
+            System.out.println(Thread.currentThread().getName() + " task " + id + " is running...");
+            try {
+                Thread.sleep(4000);
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
+        }
+    }
+
+    static class ReturnableTask implements Callable<Integer> {
+        private final int id;
+        private final int duration;
+
+        ReturnableTask(int id, int duration) {
+            this.id = id;
+            this.duration = duration;
+        }
+
+        @Override
+        public Integer call() throws Exception {
+            System.out.println(Thread.currentThread().getName() + "returnable task " + id + " is running...");
+            try {
+                Thread.sleep(duration);
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
+            return 0;
+        }
+    }
+
     @Test
     public void thread() throws InterruptedException, ExecutionException {
-        Runnable task = () -> {
-            System.out.println(Thread.currentThread().getName() + " running...");
-            try {
-                Thread.sleep(3000);
-            } catch (InterruptedException e) {
-                throw new RuntimeException(e);
-            }
-        };
-        Thread thread = new Thread(task);
+        Thread thread = new Thread(new Task(0));
         thread.run();
         thread.start();
-//        Thread.sleep(3000);
-//        thread.start();
+        Thread.sleep(3000);
+        thread.start();
 
         ExecutorService executor = Executors.newSingleThreadExecutor();
-        ExecutorService executor2 = Executors.newFixedThreadPool(12);
-        executor.submit(task);
-        executor.submit(task);
-        executor2.submit(task);
-        executor2.submit(task);
+        ExecutorService executor2 = Executors.newFixedThreadPool(3);
+        executor.submit(new Task(1));
+        executor.submit(new Task(2));
 
-        Callable<Integer> returnableTask = () -> {
-            System.out.println(Thread.currentThread().getName() + " running...");
-            try {
-                Thread.sleep(3000);
-            } catch (InterruptedException e) {
-                throw new RuntimeException(e);
-            }
-            return 42;
-        };
+        executor2.submit(new Task(3));
+        executor2.submit(new Task(4));
+        executor2.submit(new Task(5));
+        executor2.submit(new Task(6));
 
-        Future<Integer> rs = executor2.submit(returnableTask);
+        Future<Integer> promise = executor2.submit(new ReturnableTask(1, 6000));
+        Future<Integer> promise2 = executor2.submit(new ReturnableTask(1, 4000));
+        Future<Integer> promise3 = executor2.submit(new ReturnableTask(1, 1000));
+
+        int rs = promise.get(); // -> block
+        int rs2 = promise2.get();
+        int rs3 = promise3.get();
+
         System.out.println(rs);
-        System.out.println(rs.get());
-        System.out.println(rs);
+        System.out.println(rs2);
+        System.out.println(rs3);
 
-        Thread.sleep(10000);
+        // need to wait for all promises to start this -> bad
+        while (rs3 < 100) {
+            rs3 += 1;
+            Thread.sleep(100);
+        }
+
+        System.out.println(rs3);
+
+        Thread.sleep(20000);
     }
 
     @Test
@@ -186,7 +227,8 @@ public class ConcurrencyTest {
                 System.out.println("Producer: Generating data...");
                 Thread.sleep(2000); // Simulate data production
                 dataAvailable.name = "Bob";
-                condition.signal(); // Notify the consumer
+                condition.signal(); // Notify 1 consumer
+//                condition.signalAll(); // Notify all consumers
                 System.out.println("Producer: Data ready, notified consumer!");
             } catch (InterruptedException e) {
                 e.printStackTrace();
@@ -204,6 +246,24 @@ public class ConcurrencyTest {
                 }
                 System.out.println("Consumer: Data received, processing...");
                 System.out.println("Consumer: Consuming data... " + dataAvailable);
+                dataAvailable.name = null;
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            } finally {
+                lock.unlock();
+            }
+        });
+
+        Thread consumer2 = new Thread(() -> {
+            lock.lock();
+            try {
+                while (dataAvailable.name == null) {
+                    System.out.println("Consumer 2: Waiting for data...");
+                    condition.await(); // Releases the lock temporarily and waits until another thread signals it
+                }
+                System.out.println("Consumer 2: Data received, processing...");
+                System.out.println("Consumer 2: Consuming data... " + dataAvailable);
+                dataAvailable.name = null;
             } catch (InterruptedException e) {
                 e.printStackTrace();
             } finally {
@@ -212,6 +272,7 @@ public class ConcurrencyTest {
         });
 
         consumer.start();
+        consumer2.start();
         producer.start();
 
         Thread.sleep(4000);
