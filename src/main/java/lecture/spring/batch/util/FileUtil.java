@@ -6,6 +6,8 @@ import java.nio.file.Path;
 
 public class FileUtil {
     public void createFile(Path path) throws IOException {
-        Files.createFile(path);
+        if (!Files.exists(path)) {
+            Files.createFile(path);
+        }
     }
 }

@@ -13,6 +13,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.time.Instant;
+
 @RestController
 @RequestMapping("job")
 public class JobController {
@@ -33,6 +35,7 @@ public class JobController {
     public String uc01() throws JobInstanceAlreadyCompleteException, JobExecutionAlreadyRunningException, JobParametersInvalidException, JobRestartException {
         jobLauncher.run(uc01Job, new JobParametersBuilder()
                 .addString("uc01.step1.output", uc01Step1Output)
+                .addString("uc01.ts", Instant.now().toString())
                 .toJobParameters());
         return "ok";
     }
