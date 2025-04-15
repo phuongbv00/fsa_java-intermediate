@@ -1,7 +1,6 @@
 package lecture.spring.web.config;
 
 import jakarta.validation.ConstraintViolationException;
-import org.springframework.validation.BindException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -10,15 +9,8 @@ import org.springframework.web.method.annotation.HandlerMethodValidationExceptio
 import java.util.logging.Logger;
 
 @ControllerAdvice
-public class ExceptionHandleAdvice {
+public class ExceptionHandlingAdvice {
     private final Logger logger = Logger.getLogger(getClass().getName());
-
-    @ExceptionHandler(BindException.class)
-    public String handleBindException(BindException ex) {
-        logger.info("BindException");
-        logger.info(ex.getBindingResult().getAllErrors().toString());
-        return "redirect:/error";
-    }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public String handleMethodArgumentNotValidException(MethodArgumentNotValidException ex) {
