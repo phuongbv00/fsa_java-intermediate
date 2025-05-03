@@ -6,7 +6,9 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 
+import java.util.Arrays;
 import java.util.List;
 
 public class JwtAuthenticationProvider implements AuthenticationProvider {
@@ -20,7 +22,10 @@ public class JwtAuthenticationProvider implements AuthenticationProvider {
             String token = credentials.toString();
             Claims claims = JwtUtils.verifyToken(token);
             assert claims != null;
-            List<GrantedAuthority> authorities = List.of();
+            String scope = claims.get("scope", String.class);
+            List<? extends GrantedAuthority> authorities = Arrays.stream(scope.split(","))
+                    .map(SimpleGrantedAuthority::new)
+                    .toList();
             return new UsernamePasswordAuthenticationToken(claims.getSubject(), token, authorities);
         } catch (Exception e) {
             e.printStackTrace();

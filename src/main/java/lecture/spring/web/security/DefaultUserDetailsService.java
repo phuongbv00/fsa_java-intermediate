@@ -8,6 +8,8 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class DefaultUserDetailsService implements UserDetailsService {
     private final UserRepository userRepository;
@@ -30,18 +32,22 @@ public class DefaultUserDetailsService implements UserDetailsService {
         userRepository.save(User.builder()
                 .email("root@example.com")
                 .password(passwordEncoder.encode("root"))
+                .roles(List.of("ROLE_ADMIN", "ROLE_USER"))
                 .build());
         userRepository.save(User.builder()
                 .email("admin@example.com")
                 .password(passwordEncoder.encode("admin"))
+                .roles(List.of("ROLE_ADMIN", "ROLE_USER"))
                 .build());
         userRepository.save(User.builder()
                 .email("user1@example.com")
                 .password(passwordEncoder.encode("user1"))
+                .roles(List.of("ROLE_USER"))
                 .build());
         userRepository.save(User.builder()
                 .email("user2@example.com")
                 .password(passwordEncoder.encode("user2"))
+                .roles(List.of("ROLE_USER"))
                 .build());
     }
 }

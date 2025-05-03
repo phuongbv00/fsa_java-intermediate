@@ -4,6 +4,8 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.List;
+
 @Entity
 @NoArgsConstructor
 @AllArgsConstructor
@@ -19,4 +21,6 @@ public class User {
     private String email;
     @JsonIgnore
     private String password;
+    @ElementCollection(fetch = FetchType.EAGER)
+    private List<String> roles;
 }

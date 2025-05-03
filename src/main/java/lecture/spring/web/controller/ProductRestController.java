@@ -3,6 +3,7 @@ package lecture.spring.web.controller;
 import lecture.spring.web.model.Product;
 import lecture.spring.web.repository.ProductRepository;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -34,6 +35,7 @@ public class ProductRestController {
                 .orElse(ResponseEntity.notFound().build());
     }
 
+    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     @PutMapping("/{id}")
     public ResponseEntity<Product> updateProduct(@PathVariable Integer id, @RequestBody Product updatedProduct) {
         return productRepository.findById(id)
@@ -49,6 +51,7 @@ public class ProductRestController {
                 .orElse(ResponseEntity.notFound().build());
     }
 
+    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     @DeleteMapping("/{id}")
     public ResponseEntity<Object> deleteProduct(@PathVariable Integer id) {
         return productRepository.findById(id)

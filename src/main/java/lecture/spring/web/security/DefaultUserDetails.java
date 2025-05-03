@@ -11,10 +11,11 @@ import java.util.List;
 public class DefaultUserDetails implements UserDetails {
     private String username;
     private String password;
+    private List<String> authorities;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return List.of(new SimpleGrantedAuthority("ROLE_USER"));
+        return authorities.stream().map(SimpleGrantedAuthority::new).toList();
     }
 
     @Override
@@ -31,6 +32,7 @@ public class DefaultUserDetails implements UserDetails {
         DefaultUserDetails userDetails = new DefaultUserDetails();
         userDetails.username = user.getEmail();
         userDetails.password = user.getPassword();
+        userDetails.authorities = user.getRoles();
         return userDetails;
     }
 }
