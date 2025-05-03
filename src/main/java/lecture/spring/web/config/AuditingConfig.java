@@ -17,7 +17,7 @@ public class AuditingConfig {
     public AuditorAware<String> auditorProvider() {
         return () -> Optional.ofNullable(SecurityContextHolder.getContext())
                 .map(SecurityContext::getAuthentication)
-                .map(Authentication::getPrincipal)
+                .map(Authentication::getName)
                 .map(Object::toString);
     }
 }
