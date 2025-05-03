@@ -31,8 +31,8 @@ public class AuthController {
         if (!passwordEncoder.matches(loginReq.getPassword(), userDetails.getPassword())) {
             throw new BadCredentialsException("Incorrect password");
         }
-        String scope = userDetails.getAuthorities().stream().map(GrantedAuthority::getAuthority).collect(Collectors.joining(","));
-        String accessToken = JwtUtils.generateToken(userDetails.getUsername(), scope);
+        String roles = userDetails.getAuthorities().stream().map(GrantedAuthority::getAuthority).collect(Collectors.joining(","));
+        String accessToken = JwtUtils.generateToken(userDetails.getUsername(), roles);
         return Map.of("accessToken", accessToken);
     }
 }

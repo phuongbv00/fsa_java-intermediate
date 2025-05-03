@@ -22,8 +22,8 @@ public class JwtAuthenticationProvider implements AuthenticationProvider {
             String token = credentials.toString();
             Claims claims = JwtUtils.verifyToken(token);
             assert claims != null;
-            String scope = claims.get("scope", String.class);
-            List<? extends GrantedAuthority> authorities = Arrays.stream(scope.split(","))
+            String roles = claims.get("roles", String.class);
+            List<? extends GrantedAuthority> authorities = Arrays.stream(roles.split(","))
                     .map(SimpleGrantedAuthority::new)
                     .toList();
             return new UsernamePasswordAuthenticationToken(claims.getSubject(), token, authorities);

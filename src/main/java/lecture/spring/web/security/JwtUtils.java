@@ -11,10 +11,10 @@ import java.util.Date;
 public class JwtUtils {
     private static final SecretKey secretKey = generateKey();
 
-    public static String generateToken(String subject, String scope) {
+    public static String generateToken(String subject, String roles) {
         return Jwts.builder()
                 .subject(subject)
-                .claim("scope", scope)
+                .claim("roles", roles)
                 .issuedAt(new Date())
                 .expiration(new Date(System.currentTimeMillis() + 1000 * 60 * 60 * 2)) // 2 hours
                 .signWith(secretKey)
