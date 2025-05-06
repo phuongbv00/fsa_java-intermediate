@@ -3,6 +3,7 @@ package lecture.spring.web.controller;
 import lecture.spring.web.model.Product;
 import lecture.spring.web.repository.ProductRepository;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -23,6 +24,7 @@ public class ProductRestController {
     }
 
     @GetMapping
+    @PreAuthorize("hasAnyAuthority('USER', 'ADMIN')")
     public ResponseEntity<List<Product>> getAllProducts() {
         return ResponseEntity.ok(productRepository.findAll());
     }
