@@ -68,7 +68,27 @@ public class ProductRestIntegrationTest {
                 .andExpect(jsonPath("$.price").value(1200.0))
                 .andExpect(jsonPath("$.description").value("Apple flagship phone"))
                 .andExpect(jsonPath("$.stockQuantity").value(10))
+                .andExpect(jsonPath("$.createdAt").isNotEmpty())
+                .andExpect(jsonPath("$.createdBy").value("user"))
                 .andExpect(jsonPath("$.imageUrl").value("http://image"));
+    }
+
+    @Test
+    @WithMockUser(username = "user", authorities = {"USER"})
+    void testCreateAndReadProduct_Expect403() throws Exception {
+        Product product = new Product();
+        product.setName("iPhone 15");
+        product.setPrice(1200.0);
+        product.setDescription("Apple flagship phone");
+        product.setStockQuantity(10);
+        product.setImageUrl("http://image");
+
+        // Create product
+        mockMvc.perform(post(BASE_URL)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(product)))
+                .andExpect(status().isForbidden())
+                .andReturn();
     }
 
     @Test
