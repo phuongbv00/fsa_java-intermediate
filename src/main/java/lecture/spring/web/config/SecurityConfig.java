@@ -22,6 +22,7 @@ import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.AuthenticationFilter;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 import java.util.List;
 import java.util.Map;
@@ -42,7 +43,7 @@ public class SecurityConfig {
                         .requestMatchers("/api/auth/login/jwt").permitAll()
                         .requestMatchers(HttpMethod.POST, "/api/products").hasAnyAuthority("ADMIN", "ROOT")
                         .anyRequest().authenticated())
-//                .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
+                .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
                 .exceptionHandling(e -> e
                         .authenticationEntryPoint((request, response, authException) -> {
                             response.setContentType(MediaType.APPLICATION_JSON.toString());
@@ -58,19 +59,19 @@ public class SecurityConfig {
                             response.getWriter().flush();
                             response.getWriter().close();
                         }))
-                .oauth2ResourceServer(oauth -> oauth.jwt(jwt -> jwt.jwtAuthenticationConverter(new Converter<>() {
-                    @Override
-                    public AbstractAuthenticationToken convert(Jwt jwt) {
-                        String name = jwt.getClaimAsString("sub");
-                        Map<String, Object> resourceAccess = jwt.getClaim("resource_access");
-                        Map<String, Object> rolesWrapper = (Map<String, Object>) resourceAccess.get("fsa-product-ms");
-                        List<String> roles = (List<String>) rolesWrapper.get("roles");
-                        List<? extends GrantedAuthority> authorities = roles.stream()
-                                .map(SimpleGrantedAuthority::new)
-                                .toList();
-                        return new JwtAuthenticationToken(jwt, authorities, name);
-                    }
-                })))
+//                .oauth2ResourceServer(oauth -> oauth.jwt(jwt -> jwt.jwtAuthenticationConverter(new Converter<>() {
+//                    @Override
+//                    public AbstractAuthenticationToken convert(Jwt jwt) {
+//                        String name = jwt.getClaimAsString("sub");
+//                        Map<String, Object> resourceAccess = jwt.getClaim("resource_access");
+//                        Map<String, Object> rolesWrapper = (Map<String, Object>) resourceAccess.get("fsa-product-ms");
+//                        List<String> roles = (List<String>) rolesWrapper.get("roles");
+//                        List<? extends GrantedAuthority> authorities = roles.stream()
+//                                .map(SimpleGrantedAuthority::new)
+//                                .toList();
+//                        return new JwtAuthenticationToken(jwt, authorities, name);
+//                    }
+//                })))
                 .build();
     }
 
