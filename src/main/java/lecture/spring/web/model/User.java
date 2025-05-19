@@ -1,5 +1,6 @@
 package lecture.spring.web.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -18,6 +19,7 @@ public class User {
     @Column(nullable = false)
     private Long id;
     private String email;
+    @JsonIgnore
     private String password;
     @ElementCollection(fetch = FetchType.EAGER)
     private List<String> roles;
